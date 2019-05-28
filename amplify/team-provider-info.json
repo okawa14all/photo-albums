@@ -9,6 +9,11 @@
             "UnauthRoleName": "photo-albums-dev-20190523094925-unauthRole",
             "StackName": "photo-albums-dev-20190523094925",
             "StackId": "arn:aws:cloudformation:ap-northeast-1:944451996357:stack/photo-albums-dev-20190523094925/9cf299c0-7cf4-11e9-8d47-0a56b21e2412"
+        },
+        "categories": {
+            "auth": {
+                "photoalbums1af59391": {}
+            }
         }
     }
 }
