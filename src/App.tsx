@@ -7,6 +7,28 @@ import './App.css';
 
 Amplify.configure(aws_exports);
 
+const signUpConfig = {
+  hiddenDefaults: ['username', 'email', 'phone_number'],
+  signUpFields: [
+    {
+      label: 'Email',
+      key: 'username',
+      required: true,
+      displayOrder: 1,
+      type: 'email',
+      custom: false
+    },
+    {
+      label: 'Password',
+      key: 'password',
+      required: true,
+      displayOrder: 2,
+      type: 'password',
+      custom: false
+    },
+  ]
+};
+
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -15,4 +37,4 @@ const App: React.FC = () => {
   );
 }
 
-export default withAuthenticator(App, { includeGreetings: true });
+export default withAuthenticator(App, { signUpConfig, includeGreetings: true });
