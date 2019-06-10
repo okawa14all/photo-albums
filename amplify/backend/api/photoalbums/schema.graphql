@@ -1,7 +1,14 @@
-type Album @model {
+type Album
+  @model
+  @auth(rules: [{
+    allow: owner,
+    ownerField: "owner",
+    operations: [create, update, delete]
+  }])
+{
   id: ID!
   name: String!
-  owner: String!
+  owner: String
   photos: [Photo] @connection(name: "AlbumPhotos")
 }
 
