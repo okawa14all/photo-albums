@@ -76,11 +76,25 @@ const AlbumsList: React.FC<TAlbumsListProps> = (albumListProps: TAlbumsListProps
   )
 }
 
+const AlbumsListLoader: React.FC = () => {
+  return (
+    <Connect query={graphqlOperation(queries.listAlbums)}>
+      {({ data, loading, error }) => {
+        if (error) return <div>Error</div>;
+        if (loading || !data) return <div>Loading...</div>;
+        return <AlbumsList albums={data} />;
+      }}
+    </Connect>
+  )
+}
+
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <Header as='h1'>Hello World!</Header>
-    </div>
+    <Grid padded>
+      <Grid.Column>
+        <AlbumsListLoader />
+      </Grid.Column>
+    </Grid>
   );
 }
 
