@@ -13,6 +13,8 @@ import {
 } from 'aws-amplify-react';
 import aws_exports from './aws-exports';
 import './App.css';
+import * as queries from './graphql/queries';
+import { ListAlbumsQuery } from './API';
 
 Amplify.configure(aws_exports);
 
@@ -50,26 +52,28 @@ const makeComparator = (key, order = 'asc') => {
   };
 };
 
-interface AlbumData {
-  id: string;
-  name: string;
-}
-
 type TAlbumsListProps = {
-  albums: Array<AlbumData>
+  albums: ListAlbumsQuery
 }
 
-const AlbumsList: React.FC<TAlbumsListProps> = ({ albums }: TAlbumsListProps) => {
-  <Segment>
-    <Header as='h3'>My Albums</Header>
-    <List divided relaxed>
-      {albums.sort(makeComparator('name')).map(album =>
-        <li key={album.id}>
-          {album.name}
-        </li>
-      )}
-    </List>
-  </Segment>
+const AlbumsList: React.FC<TAlbumsListProps> = (albumListProps: TAlbumsListProps) => {
+  const { albums } = albumListProps
+  const albumItems = albums && albums.listAlbums && albums.listAlbums.items || []
+
+  return (
+    <Segment>
+      <Header as='h3'>My Albums</Header>
+      <List divided relaxed>
+        {albumItems.sort(makeComparator('name')).map(album =>
+          album ? (
+            <li key={album.id}>
+              {album.name}
+            </li>
+          ) : null
+        )}
+      </List>
+    </Segment>
+  )
 }
 
 const App: React.FC = () => {
