@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Grid,
   Header,
@@ -6,7 +6,7 @@ import {
   List,
   Segment
 } from 'semantic-ui-react';
-import Amplify, { graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import {
   withAuthenticator,
   Connect
@@ -88,10 +88,37 @@ const AlbumsListLoader: React.FC = () => {
   )
 }
 
+const NewAlbum: React.FC = () => {
+  const [albumName, setAlbumName] = useState('');
+  const onChangeAlbumName = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAlbumName(e.target.value);
+    },
+    [albumName]
+  );
+
+  return(
+    <Segment>
+      <Header as='h3'>Add a new album</Header>
+      <Input
+        type='text'
+        name='albumName'
+        placeholder='New Album Name'
+        icon='plus'
+        iconPosition='left'
+        action={{ content: 'Create', onClick: () => { console.log(albumName) } }}
+        value={albumName}
+        onChange={onChangeAlbumName}
+      />
+    </Segment>
+  );
+}
+
 const App: React.FC = () => {
   return (
     <Grid padded>
       <Grid.Column>
+        <NewAlbum />
         <AlbumsListLoader />
       </Grid.Column>
     </Grid>
