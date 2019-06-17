@@ -14,7 +14,12 @@ import {
 import aws_exports from './aws-exports';
 import './App.css';
 import * as queries from './graphql/queries';
-import { ListAlbumsQuery } from './API';
+import * as mutations from './graphql/mutations';
+import {
+  ListAlbumsQuery,
+  CreateAlbumMutationVariables,
+  CreateAlbumMutation,
+} from './API';
 
 Amplify.configure(aws_exports);
 
@@ -94,8 +99,26 @@ const NewAlbum: React.FC = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setAlbumName(e.target.value);
     },
-    [albumName]
+    []
   );
+
+  const handleSubmit = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const newAlbum: CreateAlbumMutationVariables = {
+      input: {
+        name: albumName
+      }
+    }
+
+    const result = await API.graphql(graphqlOperation(mutations.createAlbum, newAlbum));
+    if ("data" in result && result.data) {
+      const data = result.data as CreateAlbumMutation
+      if (data.createAlbum) {
+        console.log(`Created album with name=${data.createAlbum.name}, id=${data.createAlbum.id}`);
+      }
+    }
+  }
 
   return(
     <Segment>
@@ -106,7 +129,7 @@ const NewAlbum: React.FC = () => {
         placeholder='New Album Name'
         icon='plus'
         iconPosition='left'
-        action={{ content: 'Create', onClick: () => { console.log(albumName) } }}
+        action={{ content: 'Create', onClick: handleSubmit }}
         value={albumName}
         onChange={onChangeAlbumName}
       />
