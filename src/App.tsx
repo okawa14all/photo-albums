@@ -15,10 +15,12 @@ import aws_exports from './aws-exports';
 import './App.css';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
+import * as subscriptions from './graphql/subscriptions';
 import {
   ListAlbumsQuery,
   CreateAlbumMutationVariables,
   CreateAlbumMutation,
+  OnCreateAlbumSubscription,
 } from './API';
 
 Amplify.configure(aws_exports);
@@ -82,8 +84,20 @@ const AlbumsList: React.FC<TAlbumsListProps> = (albumListProps: TAlbumsListProps
 }
 
 const AlbumsListLoader: React.FC = () => {
+  const onCreateNewAlbum = (prevQuery: ListAlbumsQuery, newData: OnCreateAlbumSubscription) => {
+    const updatedQuery = Object.assign({}, prevQuery);
+    if (updatedQuery.listAlbums && updatedQuery.listAlbums.items) {
+      updatedQuery.listAlbums.items = updatedQuery.listAlbums.items.concat(newData.onCreateAlbum);
+    }
+    return updatedQuery;
+  }
+
   return (
-    <Connect query={graphqlOperation(queries.listAlbums)}>
+    <Connect
+      query={graphqlOperation(queries.listAlbums)}
+      subscription={graphqlOperation(subscriptions.onCreateAlbum)}
+      onSubscriptionMsg={onCreateNewAlbum}
+    >
       {({ data, loading, error }) => {
         if (error) return <div>Error</div>;
         if (loading || !data) return <div>Loading...</div>;
