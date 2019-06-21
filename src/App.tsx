@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import {BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
 import {
   Grid,
   Header,
@@ -153,12 +154,23 @@ const NewAlbum: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <Grid padded>
-      <Grid.Column>
-        <NewAlbum />
-        <AlbumsListLoader />
-      </Grid.Column>
-    </Grid>
+    <Router>
+      <Grid padded>
+        <Grid.Column>
+          <Route path="/" exact component={NewAlbum} />
+          <Route path="/" exact component={AlbumsListLoader} />
+
+          <Route
+            path="/albums/:albumId"
+            render={ () => <div><NavLink to='/'>Back to Albums list</NavLink></div> }
+          />
+          <Route
+            path="/albums/:albumId"
+            render={ props => <div>TODO: Load album id={props.match.params.albumId}</div> }
+          />
+        </Grid.Column>
+      </Grid>
+    </Router>
   );
 }
 
