@@ -22,6 +22,8 @@ import {
   CreateAlbumMutationVariables,
   CreateAlbumMutation,
   OnCreateAlbumSubscription,
+  GetAlbumQuery,
+  GetAlbumQueryVariables,
 } from './API';
 
 Amplify.configure(aws_exports);
@@ -74,9 +76,9 @@ const AlbumsList: React.FC<TAlbumsListProps> = (albumListProps: TAlbumsListProps
       <List divided relaxed>
         {albumItems.sort(makeComparator('name')).map(album =>
           album ? (
-            <li key={album.id}>
-              {album.name}
-            </li>
+            <List.Item key={album.id}>
+              <NavLink to={`/albums/${album.id}`}>{album.name}</NavLink>
+            </List.Item>
           ) : null
         )}
       </List>
@@ -152,6 +154,41 @@ const NewAlbum: React.FC = () => {
   );
 }
 
+type TAlbumProps = {
+  data: GetAlbumQuery
+}
+
+const Album: React.FC<TAlbumProps> = (albumProps: TAlbumProps) => {
+  const { data } = albumProps
+  const album = data && data.getAlbum
+
+  if (album) {
+    return (
+      <Segment>
+        <Header as='h3'>{album.name}</Header>
+        <p>TODO: Allow photo uploads</p>
+        <p>TODO: Show photos for this album</p>
+      </Segment>
+    )
+  } else {
+    return null;
+  }
+}
+
+const AlbumLoader: React.FC<GetAlbumQueryVariables> = (props: GetAlbumQueryVariables) => {
+  return (
+    <Connect
+      query={graphqlOperation(queries.getAlbum, props)}
+    >
+      {({ data, loading, error }) => {
+        if (error) return <div>Error</div>;
+        if (loading || !data) return <div>Loading...</div>;
+        return <Album data={data} />;
+      }}
+    </Connect>
+  )
+}
+
 const App: React.FC = () => {
   return (
     <Router>
@@ -166,7 +203,7 @@ const App: React.FC = () => {
           />
           <Route
             path="/albums/:albumId"
-            render={ props => <div>TODO: Load album id={props.match.params.albumId}</div> }
+            render={ props => <AlbumLoader id={props.match.params.albumId} /> }
           />
         </Grid.Column>
       </Grid>
