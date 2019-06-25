@@ -1,13 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import {BrowserRouter as Router, Route, NavLink} from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import {
+  Form,
   Grid,
   Header,
   Input,
   List,
   Segment
 } from 'semantic-ui-react';
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
 import {
   withAuthenticator,
   Connect
@@ -154,6 +156,60 @@ const NewAlbum: React.FC = () => {
   );
 }
 
+type TS3ImageUploadProps = {
+  albumId: string
+}
+
+const S3ImageUpload: React.FC<TS3ImageUploadProps> = (props: TS3ImageUploadProps) => {
+  const [uploading, setUploading] = useState(false);
+
+  const onChangeFile = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const fileName = uuid();
+
+      setUploading(true);
+
+      const result = await Storage.put(
+        fileName,
+        file,
+        {
+          customPrefix: { public: 'uploads/' },
+          metadata: { albumid: props.albumId }
+        }
+      );
+
+      console.log('Uploaded file: ', result);
+      setUploading(false);
+    },
+    []
+  );
+
+  return (
+    <div>
+      <Form.Button
+        onClick={() => {
+          if (document) {
+            const inputElem = document.getElementById('add-image-file-input')
+            if (inputElem) inputElem.click();
+          }
+        }}
+        disabled={uploading}
+        icon='file image outline'
+        content={ uploading ? 'Uploading...' : 'Add Image' }
+      />
+      <input
+        id='add-image-file-input'
+        type="file"
+        accept='image/*'
+        onChange={onChangeFile}
+        style={{ display: 'none' }}
+      />
+    </div>
+  );
+}
+
 type TAlbumProps = {
   data: GetAlbumQuery
 }
@@ -166,7 +222,7 @@ const Album: React.FC<TAlbumProps> = (albumProps: TAlbumProps) => {
     return (
       <Segment>
         <Header as='h3'>{album.name}</Header>
-        <p>TODO: Allow photo uploads</p>
+        <S3ImageUpload albumId={album.id}/>
         <p>TODO: Show photos for this album</p>
       </Segment>
     )
