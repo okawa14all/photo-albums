@@ -9,7 +9,7 @@ import {
   List,
   Segment
 } from 'semantic-ui-react';
-import Amplify, { API, graphqlOperation, Storage } from 'aws-amplify';
+import Amplify, { API, Auth, graphqlOperation, Storage } from 'aws-amplify';
 import {
   withAuthenticator,
   Connect
@@ -167,7 +167,9 @@ const S3ImageUpload: React.FC<TS3ImageUploadProps> = (props: TS3ImageUploadProps
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
+
       const fileName = uuid();
+      const user = await Auth.currentAuthenticatedUser();
 
       setUploading(true);
 
@@ -176,7 +178,7 @@ const S3ImageUpload: React.FC<TS3ImageUploadProps> = (props: TS3ImageUploadProps
         file,
         {
           customPrefix: { public: 'uploads/' },
-          metadata: { albumid: props.albumId }
+          metadata: { albumid: props.albumId, owner: user.username }
         }
       );
 

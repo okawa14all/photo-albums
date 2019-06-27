@@ -1,18 +1,10 @@
-type Album
-  @model
-  @auth(rules: [{
-    allow: owner,
-    ownerField: "owner",
-    operations: [create, update, delete]
-  }])
-{
+type Album @model @auth(rules: [{allow: owner}]) {
   id: ID!
   name: String!
-  owner: String
   photos: [Photo] @connection(name: "AlbumPhotos")
 }
 
-type Photo @model {
+type Photo @model @auth(rules: [{allow: owner}]) {
   id: ID!
   album: Album @connection(name: "AlbumPhotos")
   bucket: String!
