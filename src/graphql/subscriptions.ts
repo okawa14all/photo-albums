@@ -5,7 +5,6 @@ export const onCreateAlbum = `subscription OnCreateAlbum {
   onCreateAlbum {
     id
     name
-    owner
     photos {
       items {
         id
@@ -20,7 +19,6 @@ export const onUpdateAlbum = `subscription OnUpdateAlbum {
   onUpdateAlbum {
     id
     name
-    owner
     photos {
       items {
         id
@@ -35,7 +33,6 @@ export const onDeleteAlbum = `subscription OnDeleteAlbum {
   onDeleteAlbum {
     id
     name
-    owner
     photos {
       items {
         id
@@ -52,7 +49,6 @@ export const onCreatePhoto = `subscription OnCreatePhoto {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }
@@ -77,7 +73,6 @@ export const onUpdatePhoto = `subscription OnUpdatePhoto {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }
@@ -102,7 +97,6 @@ export const onDeletePhoto = `subscription OnDeletePhoto {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }

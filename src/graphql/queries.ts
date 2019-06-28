@@ -5,7 +5,6 @@ export const getAlbum = `query GetAlbum($id: ID!) {
   getAlbum(id: $id) {
     id
     name
-    owner
     photos {
       items {
         id
@@ -25,7 +24,6 @@ export const listAlbums = `query ListAlbums(
     items {
       id
       name
-      owner
       photos {
         nextToken
       }
@@ -40,7 +38,6 @@ export const getPhoto = `query GetPhoto($id: ID!) {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }
@@ -70,7 +67,6 @@ export const listPhotos = `query ListPhotos(
       album {
         id
         name
-        owner
       }
       bucket
       fullsize {

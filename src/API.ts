@@ -4,13 +4,11 @@
 export type CreateAlbumInput = {
   id?: string | null,
   name: string,
-  owner?: string | null,
 };
 
 export type UpdateAlbumInput = {
   id: string,
   name?: string | null,
-  owner?: string | null,
 };
 
 export type DeleteAlbumInput = {
@@ -46,7 +44,6 @@ export type DeletePhotoInput = {
 export type ModelAlbumFilterInput = {
   id?: ModelIDFilterInput | null,
   name?: ModelStringFilterInput | null,
-  owner?: ModelStringFilterInput | null,
   and?: Array< ModelAlbumFilterInput | null > | null,
   or?: Array< ModelAlbumFilterInput | null > | null,
   not?: ModelAlbumFilterInput | null,
@@ -95,7 +92,6 @@ export type CreateAlbumMutation = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -117,7 +113,6 @@ export type UpdateAlbumMutation = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -139,7 +134,6 @@ export type DeleteAlbumMutation = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -164,7 +158,6 @@ export type CreatePhotoMutation = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -198,7 +191,6 @@ export type UpdatePhotoMutation = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -232,7 +224,6 @@ export type DeletePhotoMutation = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -263,7 +254,6 @@ export type GetAlbumQuery = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -289,7 +279,6 @@ export type ListAlbumsQuery = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -311,7 +300,6 @@ export type GetPhotoQuery = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -349,7 +337,6 @@ export type ListPhotosQuery = {
         __typename: "Album",
         id: string,
         name: string,
-        owner: string | null,
       } | null,
       bucket: string,
       fullsize:  {
@@ -374,7 +361,6 @@ export type OnCreateAlbumSubscription = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -392,7 +378,6 @@ export type OnUpdateAlbumSubscription = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -410,7 +395,6 @@ export type OnDeleteAlbumSubscription = {
     __typename: "Album",
     id: string,
     name: string,
-    owner: string | null,
     photos:  {
       __typename: "ModelPhotoConnection",
       items:  Array< {
@@ -431,7 +415,6 @@ export type OnCreatePhotoSubscription = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -461,7 +444,6 @@ export type OnUpdatePhotoSubscription = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,
@@ -491,7 +473,6 @@ export type OnDeletePhotoSubscription = {
       __typename: "Album",
       id: string,
       name: string,
-      owner: string | null,
       photos:  {
         __typename: "ModelPhotoConnection",
         nextToken: string | null,

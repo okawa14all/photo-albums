@@ -5,7 +5,6 @@ export const createAlbum = `mutation CreateAlbum($input: CreateAlbumInput!) {
   createAlbum(input: $input) {
     id
     name
-    owner
     photos {
       items {
         id
@@ -20,7 +19,6 @@ export const updateAlbum = `mutation UpdateAlbum($input: UpdateAlbumInput!) {
   updateAlbum(input: $input) {
     id
     name
-    owner
     photos {
       items {
         id
@@ -35,7 +33,6 @@ export const deleteAlbum = `mutation DeleteAlbum($input: DeleteAlbumInput!) {
   deleteAlbum(input: $input) {
     id
     name
-    owner
     photos {
       items {
         id
@@ -52,7 +49,6 @@ export const createPhoto = `mutation CreatePhoto($input: CreatePhotoInput!) {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }
@@ -77,7 +73,6 @@ export const updatePhoto = `mutation UpdatePhoto($input: UpdatePhotoInput!) {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }
@@ -102,7 +97,6 @@ export const deletePhoto = `mutation DeletePhoto($input: DeletePhotoInput!) {
     album {
       id
       name
-      owner
       photos {
         nextToken
       }

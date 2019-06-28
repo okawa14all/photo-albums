@@ -1,0 +1,4 @@
+{
+  "S3UserfilesBucketName": "photo-albumsc3012184245246368597117b9c54f592-dev",
+  "DynamoDBPhotosTableArn": "arn:aws:dynamodb:ap-northeast-1:944451996357:table/Photo-on2dkkglfreglnp5iy6uq7bo3m-dev"
+}
