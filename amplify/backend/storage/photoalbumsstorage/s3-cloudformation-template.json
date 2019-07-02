@@ -47,7 +47,7 @@
 		"s3PermissionsGuestPublic": {
 			"Type": "String",
 			"Default" : "DISALLOW"
-		},	
+		},
 		"s3PermissionsGuestUploads": {
 			"Type": "String",
 			"Default" : "DISALLOW"		},
@@ -143,6 +143,16 @@
 		}
 	},
 	"Resources": {
+		"InvokePhotoProcessorLambda": {
+			"Type" : "AWS::Lambda::Permission",
+			"Properties" : {
+				"Action" : "lambda:InvokeFunction",
+				"FunctionName" : "workshopphotoprocessor-dev",
+				"Principal" : "s3.amazonaws.com",
+				"SourceAccount" :  { "Ref": "AWS::AccountId" },
+				"SourceArn": "arn:aws:s3:::photo-albumsc3012184245246368597117b9c54f592-dev"
+			}
+		},
 		"S3Bucket": {
 			"Type": "AWS::S3::Bucket",
 			"DeletionPolicy" : "Retain",
@@ -195,6 +205,66 @@
 							"MaxAge": "3000"
 						}
 					]
+				},
+				"NotificationConfiguration": {
+					"LambdaConfigurations": [
+						{
+							"Function": {
+								"Fn::Join": [":", [
+									"arn:aws:lambda",
+									{ "Ref": "AWS::Region" },
+									{ "Ref": "AWS::AccountId" },
+									"function",
+									"workshopphotoprocessor-dev"
+									]
+								]
+							},
+							"Event": "s3:ObjectCreated:Put",
+							"Filter": {
+								"S3Key": {
+									"Rules": [
+										{ "Name": "prefix", "Value": "uploads/" }
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		"DenyListS3BucketsAuth": {
+			"DependsOn": [ "S3Bucket" ],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "DenyListS3Buckets",
+				"Roles": [ { "Ref": "authRoleName" } ],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Deny",
+							"Action": [ "s3:ListBucket" ],
+							"Resource": ["*"]
+						}
+					]
+				}
+			}
+		},
+		"DenyListS3BucketsGuest": {
+			"DependsOn": [ "S3Bucket" ],
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "DenyListS3BucketsGuest",
+				"Roles": [ { "Ref": "unauthRoleName" } ],
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Deny",
+							"Action": [ "s3:ListBucket" ],
+							"Resource": ["*"]
+						}
+					]
 				}
 			}
 		},
@@ -221,7 +291,7 @@
 							"Action": {
 								"Fn::Split" : [ "," , {
 									"Ref": "s3PermissionsAuthenticatedPublic"
-								} ] 
+								} ]
 							},
 							"Resource": [
 								{
@@ -265,7 +335,7 @@
 							"Action": {
 								"Fn::Split" : [ "," , {
 									"Ref": "s3PermissionsAuthenticatedProtected"
-								} ] 
+								} ]
 							},
 							"Resource": [
 								{
@@ -309,7 +379,7 @@
 							"Action": {
 								"Fn::Split" : [ "," , {
 									"Ref": "s3PermissionsAuthenticatedPrivate"
-								} ] 
+								} ]
 							},
 							"Resource": [
 								{
@@ -353,7 +423,7 @@
 							"Action": {
 								"Fn::Split" : [ "," , {
 									"Ref": "s3PermissionsAuthenticatedUploads"
-								} ] 
+								} ]
 							},
 							"Resource": [
 								{
@@ -470,7 +540,7 @@
 							"Action": {
 								"Fn::Split" : [ "," , {
 									"Ref": "s3PermissionsGuestPublic"
-								} ] 
+								} ]
 							},
 							"Resource": [
 								{
@@ -514,7 +584,7 @@
 							"Action": {
 								"Fn::Split" : [ "," , {
 									"Ref": "s3PermissionsGuestUploads"
-								} ] 
+								} ]
 							},
 							"Resource": [
 								{
