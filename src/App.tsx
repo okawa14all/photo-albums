@@ -7,18 +7,21 @@ import {
   Header,
   Input,
   List,
-  Segment
+  Segment,
+  Divider,
 } from 'semantic-ui-react';
 import Amplify, { API, Auth, graphqlOperation, Storage } from 'aws-amplify';
 import {
   withAuthenticator,
-  Connect
+  Connect,
+  S3Image,
 } from 'aws-amplify-react';
 import aws_exports from './aws-exports';
 import './App.css';
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
 import * as subscriptions from './graphql/subscriptions';
+import * as myQueries from './graphql/myQueries';
 import {
   ListAlbumsQuery,
   CreateAlbumMutationVariables,
@@ -26,6 +29,7 @@ import {
   OnCreateAlbumSubscription,
   GetAlbumQuery,
   GetAlbumQueryVariables,
+  ListPhotosQuery,
 } from './API';
 
 Amplify.configure(aws_exports);
@@ -212,8 +216,46 @@ const S3ImageUpload: React.FC<TS3ImageUploadProps> = (props: TS3ImageUploadProps
   );
 }
 
+type TPhotosListProps = {
+  photos: Array<{
+    id: string,
+    thumbnail: {
+      key: string,
+      width: number,
+      height: number,
+    },
+    fullsize:  {
+      key: string,
+      width: number,
+      height: number,
+    },
+  }> | null
+};
+
+const PhotosList: React.FC<TPhotosListProps> = (photosListProps: TPhotosListProps) => {
+  const { photos } = photosListProps;
+
+  if (!photos) {
+    return null;
+  }
+
+  return (
+    <div>
+      <Divider hidden />
+      {photos.map(photo =>
+        <S3Image
+          key={photo.thumbnail.key}
+          imgKey={photo.thumbnail.key.replace('public/', '')}
+          style={{display: 'inline-block', 'paddingRight': '5px'}}
+        />
+      )}
+    </div>
+  );
+}
+
+// TODO
 type TAlbumProps = {
-  data: GetAlbumQuery
+  data: any
 }
 
 const Album: React.FC<TAlbumProps> = (albumProps: TAlbumProps) => {
@@ -225,7 +267,7 @@ const Album: React.FC<TAlbumProps> = (albumProps: TAlbumProps) => {
       <Segment>
         <Header as='h3'>{album.name}</Header>
         <S3ImageUpload albumId={album.id}/>
-        <p>TODO: Show photos for this album</p>
+        <PhotosList photos={album.photos.items} />
       </Segment>
     )
   } else {
@@ -236,7 +278,7 @@ const Album: React.FC<TAlbumProps> = (albumProps: TAlbumProps) => {
 const AlbumLoader: React.FC<GetAlbumQueryVariables> = (props: GetAlbumQueryVariables) => {
   return (
     <Connect
-      query={graphqlOperation(queries.getAlbum, props)}
+      query={graphqlOperation(myQueries.getAlbum, props)}
     >
       {({ data, loading, error }) => {
         if (error) return <div>Error</div>;
